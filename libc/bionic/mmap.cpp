@@ -34,6 +34,8 @@
 #include "private/bionic_macros.h"
 #include "private/ErrnoRestorer.h"
 
+#define TO_64(a) ((a) & 0x00000000ffffffff)
+
 // mmap2(2) is like mmap(2), but the offset is in 4096-byte blocks, not bytes.
 extern "C" void*  __mmap2(void*, size_t, int, int, int, size_t);
 
@@ -73,5 +75,5 @@ void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offse
 }
 
 void* mmap(void* addr, size_t size, int prot, int flags, int fd, off_t offset) {
-  return mmap64(addr, size, prot, flags, fd, static_cast<off64_t>(offset));
+  return mmap64(addr, size, prot, flags, fd, TO_64(static_cast<off64_t>(offset)));
 }
